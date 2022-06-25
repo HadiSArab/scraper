@@ -4,6 +4,12 @@ import requests
 from flask import Flask, request, redirect, url_for
 from flask import render_template
 import json
+from datetime import datetime
+
+# get current date and time 
+date = datetime.now() 
+# costumize date format
+date = date.strftime("%Y.%m.%d")
 
 app = Flask(__name__)
 
@@ -28,6 +34,7 @@ def digikala():
         # convert response to python dictionary
         # ".text" help us to convert to dictionary
         resp = json.loads(resp.text)
+
         # print (len(resp["data"]["products"]))
         # first for loop prepare number for input "hadi" function
         # "len(resp["products"])" is number of keys
@@ -38,6 +45,10 @@ def digikala():
             # " counter + p"  allows to make ordered dictionary
             
             dic[(counter*20)+p] = resp["data"]["products"][p]
+    
+    # add date to json file
+    date_dic={"date":date}
+    dic.update(date_dic)
 
     # print (len(resp["data"]["products"]))
     # create or open a json file to convert dictionary to json and store json data 
@@ -74,8 +85,12 @@ def basalam():
         for p in range(len(resp["products"])):
             # " counter + p"  allows to make ordered dictionary
             dic[counter+p] = resp["products"][p]
+    
+    
+    # add date as an object to json file 
+    date_dic={"date":date}
+    dic.update(date_dic)
 
-   
     # create or open a json file to convert dictionary to json and store json data 
     with open(str(file_name),'w') as l:
         json.dump(dic,l)
