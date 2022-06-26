@@ -35,7 +35,6 @@ def salam3():
         with open('ali.json', 'w') as email_file:
             json.dump(emails, email_file)
         return render_template('salam3.html', name=request.form['name'], email=request.form['email'], subject=request.form['subject'], comment=request.form['comment'])
-
     else:
         # if request not be POST method, automaticly redirect to url of home func.
         return redirect(url_for('home'))

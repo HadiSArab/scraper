@@ -13,13 +13,14 @@ date = date.strftime("%Y.%m.%d")
 
 app = Flask(__name__)
 
-with open ('first.json') as k:
-    a = json.load(k)
-
 @app.route('/digikala')
 def digikala():
     cat = request.args['category']
     file_name = request.args['file'] + ".json"
+    if 'pages' in request.args:
+        pages = int(request.args['pages'])
+    else:
+        pages = 99
 
     # dictionary to store nested json
     dic = {}
@@ -27,7 +28,7 @@ def digikala():
     # url is a variable to store desired api
     # this request response page number api of digikala , counter start from "0" but page number start from "1".beacuse of that i changed format to "counter + 1"
     url = 'https://api.digikala.com/v1/categories/{}/search/?page={}'
-    for counter in range(99):
+    for counter in range(pages):
         # send request to get json data using digikala.com API
         resp = requests.get(url.format(cat,counter+1))
 
@@ -46,6 +47,13 @@ def digikala():
             
             dic[(counter*20)+p] = resp["data"]["products"][p]
     
+    
+    # beacuse flask doesnt show result with date and time in browser, i define a variable names "s" to store dic without date and show it in browser
+    # json file involved date 
+    s={}
+    for t in dic:
+        s[t] = dic[t]
+
     # add date to json file
     date_dic={"date":date}
     dic.update(date_dic)
@@ -55,7 +63,7 @@ def digikala():
     with open(str(file_name),'w') as l:
         json.dump(dic,l,indent=2)
     
-    return dic
+    return s
 
 
 @app.route('/basalam')
@@ -63,13 +71,18 @@ def basalam():
     cat = request.args['category'] 
     file_name = request.args['file'] + ".json"
 
+    if 'count' in request.args:
+        count = int(request.args['count'])
+    else:
+        count = 2000
+        
     # dictionary to store nested json
     dic = {}
 
     # url is a variable to store desired api
     # for loop is for scrape products 12 by 12. in each step scrape all 12 product and store by number "counter + p"
     url = 'https://search.basalam.com/ai-engine/api/v2.0/product/search?productAds=true&adsImpressionDisable=false&literal=false&bazarGardy=false&from={}&size=12&filters.categories={}&filters.namedTags=&filters.essenceTags=&filters.cities=&filters.hasDiscount=false&filters.isReady=false&filters.isExists=true&filters.hasDelivery=false&filters.vendorScore=false&filters.hasVideo=false&filters.basalamTag=&filters.excludeBasalamTag=&filters.queryNamedTags=false&exptags=runtime-click-20220609-control-1'
-    for counter in range(0,2000,12):
+    for counter in range(0,count,12):
         # send request to get json data using Basalam.com API
         resp = requests.get(url.format(counter,cat))
 
@@ -86,7 +99,11 @@ def basalam():
             # " counter + p"  allows to make ordered dictionary
             dic[counter+p] = resp["products"][p]
     
-    
+    # beacuse flask doesnt show result with date and time in browser, i define a variable names "s" to store dic without date and show it in browser
+    # json file involved date 
+    s={}
+    for t in dic:
+        s[t] = dic[t]
     # add date as an object to json file 
     date_dic={"date":date}
     dic.update(date_dic)
@@ -96,4 +113,4 @@ def basalam():
         json.dump(dic,l,indent=2)
 
     
-    return dic
+    return s
