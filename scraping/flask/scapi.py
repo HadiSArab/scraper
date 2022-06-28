@@ -18,7 +18,7 @@ def digikala():
     cat = request.args['category']
     cat = str(cat)
     cat = cat.split(',')
-
+    last_dic = {}
     file_name = request.args['file'] + ".json"
     if 'pages' in request.args:
         pages = int(request.args['pages'])
@@ -62,11 +62,17 @@ def digikala():
         # add date to json file
         date_dic={"date":date}
         dic.update(date_dic)
+        
+        #don in variable to jasonify dic and finally store in last dic
+        don = {j:dic}
+        last_dic.update(don)
+    
+    # print (len(resp["data"]["products"]))
+    # create or open a json file to convert dictionary to json and store json data 
+    with open(str("./digikala/"+file_name),'w') as l:
+        json.dump(last_dic,l,indent=2)
 
-        # print (len(resp["data"]["products"]))
-        # create or open a json file to convert dictionary to json and store json data 
-        with open(str(j+'_'+file_name),'w') as l:
-            json.dump(dic,l,indent=2)
+ 
     
     return "Done"
 
@@ -76,7 +82,7 @@ def basalam():
     cat = request.args['category']
     cat = str(cat)
     cat = cat.split(',')
-
+    last_dic = {}
     file_name = request.args['file'] + ".json"
 
     if 'count' in request.args:
@@ -117,10 +123,14 @@ def basalam():
         # add date as an object to json file 
         date_dic={"date":date}
         dic.update(date_dic)
-
-        # create or open a json file to convert dictionary to json and store json data 
-        with open(str(j+'_'+file_name),'w') as l:
-            json.dump(dic,l,indent=2)
-
+        
+        #don in variable to jasonify dic and finally store in last dic 
+        don = {j:dic}
+        last_dic.update(don)
+    
+    # print (len(resp["data"]["products"]))
+    # create or open a json file to convert dictionary to json and store json data 
+    with open(str("./basalam/"+file_name),'w') as l:
+        json.dump(last_dic,l,indent=2)
     
     return "Done"
