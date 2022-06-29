@@ -25,14 +25,16 @@ def digikala():
     else:
         pages = 99
 
-    # dictionary to store nested json
-    dic = {}
+
 
     # url is a variable to store desired api
     # this request response page number api of digikala , counter start from "0" but page number start from "1".beacuse of that i changed format to "counter + 1"
     url = 'https://api.digikala.com/v1/categories/{}/search/?page={}'
     
     for j in cat:    
+        # dictionary to store nested json
+        dic = {}
+        
         for counter in range(pages):
             # send request to get json data using digikala.com API
             resp = requests.get(url.format(j,counter+1))
@@ -90,14 +92,16 @@ def basalam():
     else:
         count = 2000
         
-    # dictionary to store nested json
-    dic = {}
+
 
     # url is a variable to store desired api
     # for loop is for scrape products 12 by 12. in each step scrape all 12 product and store by number "counter + p"
     url = 'https://search.basalam.com/ai-engine/api/v2.0/product/search?productAds=true&adsImpressionDisable=false&literal=false&bazarGardy=false&from={}&size=12&filters.categories={}&filters.namedTags=&filters.essenceTags=&filters.cities=&filters.hasDiscount=false&filters.isReady=false&filters.isExists=true&filters.hasDelivery=false&filters.vendorScore=false&filters.hasVideo=false&filters.basalamTag=&filters.excludeBasalamTag=&filters.queryNamedTags=false&exptags=runtime-click-20220609-control-1'
     
     for j in cat:
+        # dictionary to store nested json
+        dic = {}
+        
         for counter in range(0,count,12):
             # send request to get json data using Basalam.com API
             resp = requests.get(url.format(counter,j))
