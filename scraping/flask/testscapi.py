@@ -1,27 +1,22 @@
-from crypt import methods
 
 import requests
 import json
 from datetime import datetime
-# get current date and time 
 date = datetime.now() 
 # costumize date format
 date = date.strftime("%Y.%m.%d")
-main_dic = {}
-cat = "headphone,men-bags"
-cat = str(cat)
-cat = cat.split(',')
+last_dic={}
 
-file_name = "mamad.json"
-pages = 2
-# dictionary to store nested json
-dic = {}
+cat = ["headphone","casual-shoes-for-men"]
+pages = 1
 
 # url is a variable to store desired api
 # this request response page number api of digikala , counter start from "0" but page number start from "1".beacuse of that i changed format to "counter + 1"
 url = 'https://api.digikala.com/v1/categories/{}/search/?page={}'
+for j in cat:
+    # dictionary to store nested json
+    dic = {}
 
-for j in cat:    
     for counter in range(pages):
         # send request to get json data using digikala.com API
         resp = requests.get(url.format(j,counter+1))
@@ -40,8 +35,8 @@ for j in cat:
             # " counter + p"  allows to make ordered dictionary
             
             dic[(counter*20)+p] = resp["data"]["products"][p]
-    
-    
+
+
     # beacuse flask doesnt show result with date and time in browser, i define a variable names "s" to store dic without date and show it in browser
     # json file involved date 
     s={}
@@ -52,16 +47,11 @@ for j in cat:
     date_dic={"date":date}
     dic.update(date_dic)
 
-    don = {j : dic}
-    main_dic.update(don)
+    #don in variable to jasonify dic and finally store in last dic
+    don = {j:dic}
+    last_dic.update(don)
 
-
-
-    # # print (len(resp["data"]["products"]))
-    # # create or open a json file to convert dictionary to json and store json data 
-    # with open(str(j+'_'+file_name),'w') as l:
-    #     json.dump(dic,l,indent=2)
-
-
-with open ('all.json','w') as file:
-    json.dump(main_dic,file,indent=2)
+# print (len(resp["data"]["products"]))
+# create or open a json file to convert dictionary to json and store json data 
+with open(str("./digikala/ali"),'w') as l:
+    json.dump(last_dic,l,indent=2)

@@ -1,4 +1,3 @@
-from crypt import methods
 
 import requests
 from flask import Flask, request, redirect, url_for
@@ -9,7 +8,7 @@ from datetime import datetime
 # get current date and time 
 date = datetime.now() 
 # costumize date format
-date = date.strftime("%Y.%m.%d")
+date = date.strftime("%Y.%m.%d ___ %H:%M:%S")
 
 app = Flask(__name__)
 
@@ -77,8 +76,7 @@ def digikala():
  
     
     return "Done"
-
-
+    
 @app.route('/basalam')
 def basalam():
     cat = request.args['category']
